@@ -5,3 +5,4 @@
 4. npm install react-responsive-carousel
 5. npm install --save aos@next
 6. npm install react-icons --save
+7. npm install react-fast-marquee --save
