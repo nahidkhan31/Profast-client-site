@@ -17,11 +17,11 @@
   font-style: normal;
 }
 
-/* .swiper-slide-active {
+.swiper-slide-active {
   opacity: 1 !important;
   transform: scale(1.05);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 .swiper-slide {
   transition: all 0.3s ease;
-} */
+}
