@@ -9,3 +9,6 @@ Installation
 6. npm install react-icons --save
 7. npm install react-fast-marquee --save
 8. npm install swiper
+12. npm install react-hook-form
+13. npm install firebase
+13. 
