@@ -11,4 +11,4 @@ Installation
 8. npm install swiper
 12. npm install react-hook-form
 13. npm install firebase
-13. 
+13. npm install leaflet react-leaflet
