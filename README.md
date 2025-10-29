@@ -12,3 +12,4 @@ Installation
 12. npm install react-hook-form
 13. npm install firebase
 13. npm install leaflet react-leaflet
+14. npm install sweetalert2 
