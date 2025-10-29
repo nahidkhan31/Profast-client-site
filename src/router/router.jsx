@@ -8,6 +8,9 @@ import Register from "../Pages/Authentication/Register/Register";
 import Coverage from "../Pages/Coverage/Coverage";
 import PrivateRoute from "../routes/PrivateRoute";
 import SendParcel from "../Pages/SendParcel/SendParcel";
+import DashboardLayout from "../layouts/DashboardLayout";
+import MyParcels from "../Pages/Dashboard/MyParcels/MyParcels";
+import DashboardHome from "../Pages/Dashboard/DashboardHome/DashboardHome";
 
 export const router = createBrowserRouter([
   {
@@ -25,10 +28,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "sendParcel",
-        element:
+        element: (
           <PrivateRoute>
             <SendParcel></SendParcel>
-          </PrivateRoute>,
+          </PrivateRoute>
+        ),
         loader: () => fetch("/service-center.json"),
       },
     ],
@@ -37,14 +41,35 @@ export const router = createBrowserRouter([
     path: "/",
     Component: AuthLayout,
     children: [
+      // {
+      //   index: true,
+      //   path: "login",
+      //   Component: Login,
+      // },
+      // {
+      //   path: "register",
+      //   Component: Register,
+      // },
+      { path: "login", element: <Login /> },
+      { path: "register", element: <Register /> },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+
+    children: [
       {
         index: true,
-        path: "login",
-        Component: Login,
+        element: <DashboardHome></DashboardHome>,
       },
       {
-        path: "register",
-        Component: Register,
+        path: "myParcels",
+        element: <MyParcels></MyParcels>,
       },
     ],
   },
