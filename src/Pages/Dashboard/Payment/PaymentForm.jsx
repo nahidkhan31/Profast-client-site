@@ -6,6 +6,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../Home/Loading/Loading";
 import Swal from "sweetalert2";
+import useTrackingLogger from "../../../hooks/useTrackingLogger";
 
 const PaymentForm = () => {
   const stripe = useStripe();
@@ -13,6 +14,7 @@ const PaymentForm = () => {
   const { user } = useAuth();
   const { parcelId } = useParams();
   const axiosSecure = useAxiosSecure();
+  const { logTracking } = useTrackingLogger();
   const navigate = useNavigate();
   //   console.log(parcelId, user);
 
@@ -98,6 +100,12 @@ const PaymentForm = () => {
               title: "Payment Successful!",
               html: `<strong>Transaction ID:</strong> <code>${transactionId}</code>`,
               confirmButtonText: "Go to My Parcels",
+            });
+            await logTracking({
+              tracking_id: parcelInfo.tracking_id,
+              status: "payment_done",
+              details: `Paid by ${user.displayName}`,
+              updated_by: user.email,
             });
             // ✅ Redirect to /myParcels
             navigate("/dashboard/myParcels");
