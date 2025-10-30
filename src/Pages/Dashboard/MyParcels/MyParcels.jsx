@@ -3,10 +3,12 @@ import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const MyParcels = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
 
   const { data: parcels = [], refetch } = useQuery({
     queryKey: ["my-parcels", user.email],
@@ -22,46 +24,46 @@ const MyParcels = () => {
   };
 
   const handlePay = (id) => {
-    console.log("Proceed to payment for", id);
+    // console.log("Proceed to payment for", id);
+    navigate(`/dashboard/payment/${id}`);
   };
 
   const handleDelete = async (id) => {
     console.log(id);
     const confirm = await Swal.fire({
-            title: "Are you sure?",
-            text: "This parcel will be permanently deleted!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, delete it",
-            cancelButtonText: "Cancel",
-            confirmButtonColor: "#e11d48", // red-600
-            cancelButtonColor: "#6b7280",  // gray-500
+      title: "Are you sure?",
+      text: "This parcel will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#e11d48", // red-600
+      cancelButtonColor: "#6b7280", // gray-500
+    });
+    if (confirm.isConfirmed) {
+      try {
+        axiosSecure.delete(`/parcels/${id}`).then((res) => {
+          console.log(res.data);
+          if (res.data.deletedCount) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Parcel has been deleted.",
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          }
+          refetch();
         });
-         if (confirm.isConfirmed) {
-            try {
-                axiosSecure.delete(`/parcels/${id}`)
-                .then(res=>{
-                     console.log(res.data);
-                        if (res.data.deletedCount) {
-                            Swal.fire({
-                                title: "Deleted!",
-                                text: "Parcel has been deleted.",
-                                icon: "success",
-                                timer: 1500,
-                                showConfirmButton: false,
-                            });
-                        }
-                        refetch();
-                })
-            } catch (error){
-          Swal.fire("Error", error.message || "Failed to delete parcel", "error");
-            }
-        }
+      } catch (error) {
+        Swal.fire("Error", error.message || "Failed to delete parcel", "error");
+      }
+    }
   };
 
   const formatDate = (iso) => {
-        return new Date(iso).toLocaleString(); // Format: "6/22/2025, 3:11:31 AM"
-    };
+    return new Date(iso).toLocaleString(); // Format: "6/22/2025, 3:11:31 AM"
+  };
 
   //   console.log(parcels);
   return (

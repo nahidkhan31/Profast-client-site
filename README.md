@@ -15,3 +15,4 @@ Installation
 14. npm install sweetalert2 
 15. npm install axios
 16. npm i @tanstack/react-query
+17. npm install --save @stripe/react-stripe-js @stripe/stripe-js
