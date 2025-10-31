@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
+import useAxios from "../../../hooks/useAxios";
 
 const Register = () => {
   const {
@@ -11,13 +12,42 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { createUser } = useAuth();
+  const { createUser, updateUserProfile } = useAuth();
   const [profilePic, setProfilePic] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const axiosInstance = useAxios();
+  const from = location.state?.from || "/";
   const onSubmit = (data) => {
     // console.log(data);
     createUser(data.email, data.password)
-      .then((result) => {
+      .then(async (result) => {
         console.log(result.user);
+
+        // update userinfo in the database
+        const userInfo = {
+             email: data.email,
+             role: 'user', //default role
+             created_at: new Date().toISOString(),
+             last_log_in: new Date().toISOString() 
+        }
+
+        const userRes = await axiosInstance.post("/users", userInfo)
+        console.log(userRes.data)
+
+        // update user profile in firebase
+        const userProfile = {
+          displayName: data.name,
+          photoURL: profilePic,
+        };
+        updateUserProfile(userProfile)
+          .then(() => {
+            console.log("profile name and pic updated");
+            navigate(from);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       })
       .catch((error) => {
         console.error(error);
